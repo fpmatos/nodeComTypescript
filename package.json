@@ -1,0 +1,42 @@
+{
+  "name": "nodecomtypescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && npm run watch",
+    "build": "tsc && npm run copy-static-files-dist",
+    "watch": "concurrently --kill-others \"tsc -w\" \"nodemon dist/server.js\"",
+    "serve": "set NODE_ENV=production&&nodemon dist/server.js",
+    "copy-static-files-dist": "node copyStaticFilesToDist.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/body-parser": "^1.16.4",
+    "@types/express": "^4.0.36",
+    "@types/jwt-simple": "^0.5.33",
+    "@types/mongoose": "^4.7.19",
+    "@types/node": "^8.0.16",
+    "@types/passport": "^0.3.3",
+    "@types/passport-facebook": "^2.1.5",
+    "@types/passport-google-oauth": "^1.0.35",
+    "@types/passport-local": "^1.0.30",
+    "concurrently": "^3.5.0",
+    "shelljs": "^0.7.8",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jwt-simple": "^0.5.1",
+    "mongoose": "^4.11.5",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "request-context": "^2.0.0"
+  }
+}
