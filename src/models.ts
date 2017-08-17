@@ -1,31 +1,17 @@
+import DefaultConnection from './db/connections/default-connection';
 import { Model, Document } from 'mongoose';
 import * as userSchema from './db/schemas/user';
-import * as dbContext from './common/db-context';
+import { AppContext } from './common/app-context';
 
-export let User: Model<Document>;
-export let Teste: Model<Document>;
+export class Models {
 
-export let config = () => {
+    User: Model<Document>;
 
-    dbContext.event.on("connectionAdded", (args) => {
+    constructor(context: AppContext) {
 
-        let key = args;
+        let defaultConnection = <DefaultConnection>context.get("defaultConnection");
 
-        let connection = dbContext.get(key).getInstanceConnection();
-        console.log(`start config models of connection ${key}  ...`);
-
-        switch(key)
-        {
-            case "default":
-                User = connection.model("Users", userSchema.schema);
-                break;
-            case "teste":
-                Teste = connection.model("Testes", userSchema.schema);
-                break;
-        }
-
-        console.log(`end config models of connection ${key}  ...`);
-    });
-    
-};
+        this.User = defaultConnection.getInstanceConnection().model("Users", userSchema.schema);
+    }
+}
 

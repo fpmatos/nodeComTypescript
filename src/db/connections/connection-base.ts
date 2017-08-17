@@ -1,3 +1,4 @@
+import { Logger } from './../../common/logger';
 import * as mongoose from "mongoose";
 
 export module db {
@@ -10,24 +11,41 @@ export module db {
             this.connectionString = connectionString;
         }
 
-        createAndOpenConnection() : Promise<ConnectionBase> {
+        createAndOpenConnection() : Promise<ConnectionBase> {   
+
             return new Promise((resolve, reject) => {
+                let connection = mongoose.createConnection(this.connectionString, { server:{ auto_reconnect: true, socketOptions: { keepAlive: 1, poolSize: 20 } }});
+
+                this.instanceConnection = connection;   
                 
-                let connection = mongoose.createConnection();
+                let db = connection.db;
 
-                console.log(`connect in database ${this.connectionString} ...`);
-
-                connection.open(this.connectionString, null, null, null, (error) => {
-                    console.log('111');
-                    if(error)
-                    {
-                        console.log(`error when try connect in database ${this.connectionString}. Error:`, error);
-                        reject(error);
-                    }
+                connection.on('connecting', () => {
+                    Logger.info(`connecting to MongoDB ${this.connectionString}`);
                 });
 
-                this.instanceConnection = connection;
-                resolve(this); 
+                connection.on('error', (error) => {
+                    Logger.warn(`Mongo DB ${this.connectionString} Error!`);
+                    reject(error);
+                    //-- mongoose.disconnect();
+                });
+
+                connection.on('connected', () => {
+                    Logger.info(`connected to MongoDB ${this.connectionString}`);
+                    resolve(this);
+                });
+
+                db.once('open', () => {
+                    Logger.info(`MongoDB ${this.connectionString} opened!`);
+                });
+
+                connection.on('reconnected', () => {
+                    Logger.info(`MongoDB ${this.connectionString} reconnected!`);
+                });
+                
+                connection.on('disconnected', () => {
+                    Logger.info(`MongoDB ${this.connectionString} disconnected!`);
+                });                
             });
         }
 

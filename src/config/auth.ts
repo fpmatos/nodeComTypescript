@@ -1,13 +1,15 @@
-import { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import { Logger } from './../common/logger';
+import { Express, Response, NextFunction, RequestHandler } from 'express';
+import {Request} from '../common/app-request'
 import * as jwt from 'jwt-simple';
-import * as userContext from '../common/user-context';
 import * as passports from './passports';
 import * as passport from "passport";
 
 export let checkAuthorize = (...roles: string[]): RequestHandler => {    
 
-    let fnCheckAuthRequest: RequestHandler = (req, res, next) => {
-        if(!userContext.get()) res.sendStatus(401); 
+    let fnCheckAuthRequest: RequestHandler = (req: Request, res, next) => {
+
+        if(!req.context.getUser()) res.sendStatus(401); 
         else next(null);
     }
 
@@ -16,7 +18,7 @@ export let checkAuthorize = (...roles: string[]): RequestHandler => {
 
 export let config = (app: Express) => {
 
-    console.log(`start auth config ...`);
+    Logger.info(`start auth config ...`);
 
     passports.config(app)
 
@@ -30,7 +32,7 @@ export let config = (app: Express) => {
 
     app.get('/auth/google/callback', getGoogleCallback);
 
-    app.use((req, res, next) =>{
+    app.use((req: Request, res, next) =>{
 
         authRequest(req)
         .then(() => {
@@ -41,13 +43,12 @@ export let config = (app: Express) => {
         });
     });
     
-    console.log(`end auth config ...`);
+    Logger.info(`end auth config ...`);
 }
 
 let getFacebookCallback = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('facebook', (err: Error, user: any, next: any) => {           
             
-            console.log("user:", user);
             res.send("dsffdsf");
 
         })(req, res, next);
@@ -56,7 +57,6 @@ let getFacebookCallback = (req: Request, res: Response, next: NextFunction) => {
 let getGoogleCallback = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('google', (err: Error, user: any, next: any) => {           
             
-            console.log("user:", user);
             res.send(err);
 
         })(req, res, next);
@@ -84,7 +84,7 @@ let authRequest = async (req: Request) => {
 
     let tokenDecoded = jwt.decode(token, "_securityInfo");
 
-    userContext.set(tokenDecoded.sub);
+    req.context.setUser({userName: tokenDecoded.sub});
 };
 
 let generateTokenAndSend = (user: any, res: Response) => {

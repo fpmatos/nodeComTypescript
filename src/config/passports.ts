@@ -27,6 +27,8 @@ export let configLocal = (app: Express) => {
     }, (userName, password, done) => {
         if(userName === "fpmatos")
             return done(null, {userName: "fpmatos", name: "Fernando Matos"});
+        else if(userName === "user1")
+            return done(null, {userName: "user1", name: "Usuario Otario"});            
         else
             return done("Dados para autenticação inválidos", false, null)
     });    

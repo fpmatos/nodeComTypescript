@@ -1,29 +1,29 @@
+import { userError } from './../common/user-error';
 import DefaultConnection from './../db/connections/default-connection';
-import TesteConnection from './../db/connections/teste-connection';
-import * as dbContext from '../common/db-context';
-import * as models from '../models';
+import ConnectionBase from './../db/connections/connection-base';
 
-export let config = () => {
+import { Request } from './../common/app-request';
+import { AppContext } from './../common/app-context';
 
-    models.config();
+export let dbContext = () => {
+    return (req: Request, res: any, next: any) => {
 
-    console.log('start config db ...');
+        let defaultConnection = new DefaultConnection();
 
-    console.log('start config connection ...');
+        Promise.all([
+            defaultConnection.createAndOpenConnection()
+            ])
+            .then((items) => {
 
-    var defaultConnection = new DefaultConnection();    
-     
+                req.context.set("defaultConnection", items[0], recicleDb)
 
-    Promise.all([
-        defaultConnection.createAndOpenConnection()
-    ]).then((values) => {        
+                next();
+            }).catch((err) =>{
+                next(err);
+            });        
+    };    
+}
 
-        dbContext.add("default", values[0]);
-
-        console.log('end config connection ...');
-    }).catch((err) => {
-        console.log('error config connection ...', err);
-    });    
-
-    console.log('end config db ...');    
-};
+let recicleDb = async (db: ConnectionBase) => {
+    await db.getInstanceConnection().close();
+}

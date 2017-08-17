@@ -1,21 +1,30 @@
+import { Logger } from './../common/logger';
+import * as usersController from './../controllers/users';
 import { checkAuthorize } from './auth';
 import * as express from 'express';
-import * as usersController from '../controllers/users';
-import * as userContext from '../common/user-context';
 
-export let config = (app: express.Express) => {    
 
-    console.log(`start routes config ...`);
 
-    let apiRouter = express.Router();
+export let config = async (app: express.Express) => {    
 
-    app.use("/api", apiRouter);
+    Logger.info("start routes config ....");
 
-    configApiUsers(apiRouter);
+    try
+    {    
+        let apiRouter = express.Router();
 
-    console.log(`end routes config ...`);
+        app.use("/api", apiRouter);
+        
+        usersController.config(apiRouter);
+
+        Logger.info(`end routes config ...`);
+    }
+    catch(ex){
+        Logger.info(`errors in routes config ...`);
+        throw ex;
+    }
 }
 
-let configApiUsers = (router: express.Router) => {
-    router.get('/users', checkAuthorize(), usersController.getUsers);    
-}
+// let configApiUsers = (router: express.Router) => {
+//     router.get('/users', checkAuthorize(), usersController.getUsers);    
+// }

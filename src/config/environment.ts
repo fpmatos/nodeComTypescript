@@ -1,8 +1,9 @@
+import { Logger } from './../common/logger';
 var envVariables = require('../env.json');
 
-export let  config = () => {
+export let  config = async () => {
 
-    console.log(`start environment config ...`);
+    Logger.info(`start environment config ...`);
 
     var node_env = process.env.NODE_ENV || 'development';
     var variablesObject = envVariables[node_env];
@@ -11,7 +12,7 @@ export let  config = () => {
         process.env[key] = variablesObject[key];
     }
 
-    console.log(`end environment config ...`);
+    Logger.info(`end environment config ...`);
 
     return variablesObject;
 };
