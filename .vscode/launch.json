@@ -7,11 +7,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${file}",
+            "name": "Launch typescript",
+            "program": "${workspaceRoot}/src/server.ts",
             "outFiles": [
-                "${workspaceRoot}/out/**/*.js"
-            ]
+                "${workspaceRoot}/dist/**/*.js"
+            ],
+            "console": "internalConsole"
         }
     ]
 }
