@@ -1,4 +1,4 @@
-import { Logger } from './../../common/logger';
+import { Logger } from './../../infrastructure/logger';
 import * as mongoose from "mongoose";
 
 export module db {

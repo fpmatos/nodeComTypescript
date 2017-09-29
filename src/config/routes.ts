@@ -1,5 +1,7 @@
-import { Logger } from './../common/logger';
+import { Logger } from './../infrastructure/logger';
 import * as usersController from './../controllers/users';
+import * as foodsController from './../controllers/foods';
+import * as foodItemsController from './../controllers/foodItems';
 import { checkAuthorize } from './auth';
 import * as express from 'express';
 
@@ -16,6 +18,8 @@ export let config = async (app: express.Express) => {
         app.use("/api", apiRouter);
         
         usersController.config(apiRouter);
+        foodsController.config(apiRouter);
+        foodItemsController.config(apiRouter);
 
         Logger.info(`end routes config ...`);
     }
@@ -24,7 +28,3 @@ export let config = async (app: express.Express) => {
         throw ex;
     }
 }
-
-// let configApiUsers = (router: express.Router) => {
-//     router.get('/users', checkAuthorize(), usersController.getUsers);    
-// }

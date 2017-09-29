@@ -1,11 +1,117 @@
 // import { Request, NextFunction } from 'express';
 // import * as express from 'express';
+
+
+
+
 // import * as bodyParser from 'body-parser';
 
+import {Schema} from "mongoose";
+import * as mongoose from "mongoose";
+
+
+// mongoose.connect("mongodb://localhost:27017/dbteste03", () => {
+
+//     let departamentoSchema = new mongoose.Schema({
+//         nome: String
+//     });
+
+//     let  funcionarioSchema = new mongoose.Schema({
+//         nome: String,
+//         departamento: {type: Schema.Types.ObjectId, ref: 'departamentos'}
+//     });
+
+// //       let model = mongoose.model("departamentos", departamentoSchema)
+
+// //   var funcionario = new model({nome: "Financeiro"});
+
+// //   funcionario.save();
+    
+//   mongoose.model("departamentos", departamentoSchema)    
+//   let model = mongoose.model("Funcionarios", funcionarioSchema)
+
+
+// //   var usuario = new model({nome: "Jose",departamento: "599df0debeaf6d308495818b"});
+
+// //   usuario.save();
+
+//     model.find({}).exec((err, doc) => {
+//         console.log((<any>doc[0]).departamento);
+//     });
+// });
 
 
 
+let adicionarLocalidade = (obj: any) => {
+    mongoose.connect("mongodb://localhost:27017/dbteste03", () => {
+        let schemaLocais = new Schema({
+            name: String,
+            loc: {
+                type: [Number], 
+                index: '2d'
+            }
+        });
 
+        let model = mongoose.model("Locais", schemaLocais);
+
+        let local1 = new model(obj);
+
+        local1.save();
+        
+    
+    });
+};
+
+let procurar = () => {
+    mongoose.connect("mongodb://localhost:27017/dbteste03", () => {
+        let schemaLocais = new Schema({
+            name: String,
+            loc: {
+                type: [Number], 
+                index: '2dsphere'
+            }
+        });
+
+        let model = mongoose.model("Locais", schemaLocais);
+
+    //     model.find({
+    //         loc: {
+    //             $near: [-23.6279881, -46.6992059],
+    //             $maxDistance: 100
+    // }           
+    //     }).exec((err, docs) => {
+    //         if(err)
+    //             console.log(err);
+    //         else
+    //             console.log(docs);
+    //     });    
+
+    // model.aggregate().near({
+    //     near: [-23.6363493, -46.6921425],
+    //     distanceField: "dist.calculated"
+    // }).exec((err, docs) => {
+    //           if(err)
+    //             console.log(err);
+    //         else
+    //             console.log(docs);      
+    // });
+
+        // model.geoNear([-23.6363493, -46.6921425], {maxDistance: 0.6 /6371, spherical: true}, function(err, docs) {
+        //     console.log(docs);
+        // });  
+
+        model.geoNear({type: "Point", coordinates: [-23.632329, -46.696978]}, {spherical: true}, function(err, docs) {
+            console.log(docs);
+        });          
+    });
+};
+
+// adicionarLocalidade({
+//             name: "av fleming",
+//             loc: [-19.8682685, -43.9855261]
+//         });
+
+procurar();
 
 
 
@@ -146,27 +252,27 @@
 
 // // // cliente1.save();
 
-let a = async () => {
-    console.log('a');
-    throw new Error("erro 1");
-}
+// let a = async () => {
+//     console.log('a');
+//     throw new Error("erro 1");
+// }
 
-let b = async () => {
-    console.log('b');
-    //throw new Error("erro 2");
-}
+// let b = async () => {
+//     console.log('b');
+//     //throw new Error("erro 2");
+// }
 
-let c = async () => {
-    try
-    {
-        await a();
-    }
-    catch(err)
-    {
-        console.log(err)       
-    }
-}
+// let c = async () => {
+//     try
+//     {
+//         await a();
+//     }
+//     catch(err)
+//     {
+//         console.log(err)       
+//     }
+// }
 
-c();
+// c();
 
 

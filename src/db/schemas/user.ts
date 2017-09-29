@@ -1,10 +1,8 @@
 import { Schema, MongooseThenable, Model, Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 
-export const schema: Schema = new mongoose.Schema({
-    nome: String,
-    telefone: String
+export const userSchema: Schema = new mongoose.Schema({
+    nome: {type: String, required: [true, "nome requerido."]},
+    telefone: String,
+    endereco: {type: String, required: [true, "Endereço obrigatório"]}
 });
-
-export default schema;
-

@@ -1,14 +1,16 @@
+import { config } from './passports';
 import * as dbConfig from './db';
-import * as appContext from './../common/app-context';
+import * as appContext from './../infrastructure/app-context';
 import * as configRoutes from './routes';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
+import * as Injector from './injector';
 import * as environment from './environment'
 import * as filtersConfig from './filters'
 import * as authConfig from './auth';
-import { Logger } from './../common/logger';
+import { Logger } from './../infrastructure/logger';
 
 let app = express();
 
@@ -16,6 +18,8 @@ export class Application {
 
     static async config() {        
        
+        await Injector.config();
+
         await Logger.config();
 
         Logger.info("start app config ....");

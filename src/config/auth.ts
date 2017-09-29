@@ -1,6 +1,6 @@
-import { Logger } from './../common/logger';
+import { Logger } from './../infrastructure/logger';
 import { Express, Response, NextFunction, RequestHandler } from 'express';
-import {Request} from '../common/app-request'
+import {Request} from '../infrastructure/app-request'
 import * as jwt from 'jwt-simple';
 import * as passports from './passports';
 import * as passport from "passport";

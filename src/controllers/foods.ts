@@ -1,6 +1,6 @@
 import { getService } from './utils';
 import { checkAuthorize } from './../config/auth';
-import { UsersAppService } from './../app-services/users';
+import { FoodsAppService } from './../app-services/foods';
 import { Request } from './../infrastructure/app-request';
 import TesteConnection from './../db/connections/teste-connection';
 import { userError } from './../infrastructure/user-error';
@@ -10,16 +10,14 @@ import * as appContext from '../infrastructure/app-context';
 
 
 export let config = (router: Router) => {
-    router.get('/users', checkAuthorize(), getUsers);    
+    router.get('/foods', getFoods);    
 }
 
+let getFoods =  (req: Request, resp: Response, next: NextFunction) => {
 
+    var service = getService(FoodsAppService, req); 
 
-let getUsers =  (req: Request, resp: Response, next: NextFunction) => {
-
-    var usersAppService = getService(UsersAppService, req); 
-
-    usersAppService.getUsers()
+    service.getFoods()
     .then((result) => {
         resp.send(result);
     })

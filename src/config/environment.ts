@@ -1,4 +1,4 @@
-import { Logger } from './../common/logger';
+import { Logger } from './../infrastructure/logger';
 var envVariables = require('../env.json');
 
 export let  config = async () => {

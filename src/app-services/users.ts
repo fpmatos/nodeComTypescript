@@ -1,4 +1,5 @@
-import { AppContext } from './../common/app-context';
+import { UserRepository } from './../repositories/user';
+import { AppContext } from './../infrastructure/app-context';
 import { AppServiceBase } from './service-base';
 
 export class UsersAppService extends AppServiceBase {
@@ -6,15 +7,12 @@ export class UsersAppService extends AppServiceBase {
         super(context);        
     }
 
-    getUsers(): Promise<any> {              
-        return new Promise((resolve, reject) => {
-            this.Models.User.find({}, (err, doc) => {
-                
-                if(err)
-                    reject(err);
+    async getUsers() {              
+        let repository = new UserRepository(this.context);
+        return repository.insert({ telefone: "33333333", nome: "Fernando", endereco: "rua niltom baldo"});
+    }
 
-                resolve(doc);
-            });
-        });
+    async save(obj: any){
+
     }
 }

@@ -1,9 +1,11 @@
-import { userError } from './../common/user-error';
+import { userError } from './../infrastructure/user-error';
 import DefaultConnection from './../db/connections/default-connection';
 import ConnectionBase from './../db/connections/connection-base';
 
-import { Request } from './../common/app-request';
-import { AppContext } from './../common/app-context';
+import { Request } from './../infrastructure/app-request';
+import { AppContext } from './../infrastructure/app-context';
+import * as dbSeeder from '../db/seeder';
+
 
 export let dbContext = () => {
     return (req: Request, res: any, next: any) => {
@@ -17,10 +19,11 @@ export let dbContext = () => {
 
                 req.context.set("defaultConnection", items[0], recicleDb)
 
-                next();
-            }).catch((err) =>{
-                next(err);
-            });        
+                dbSeeder.init(req.context).then(() => {
+                    next();
+                }).catch(next);
+                
+            }).catch(next);        
     };    
 }
 

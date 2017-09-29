@@ -1,5 +1,5 @@
-import { Logger } from './../common/logger';
-import { userError } from './../common/user-error';
+import { Logger } from './../infrastructure/logger';
+import { userError } from './../infrastructure/user-error';
 import { Router, Express, Response, Request } from 'express';
 
 export let errorHandler = () => {
@@ -8,7 +8,7 @@ export let errorHandler = () => {
         if(err instanceof userError)
         {
             res.statusMessage = err.message;
-            res.status(406).end();            
+            res.status(406).send((<userError>err).messages);        
         }        
         else
         {
@@ -24,6 +24,6 @@ export let routeNotFound = () => {
 
         if(req.route === undefined)
             res.status(404).send("recurso não foi encontrado.");
-        }
+    }
 };
 
